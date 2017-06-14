@@ -1,0 +1,25 @@
+.test-pass {
+	color: green;
+}
+
+.test-fail {
+	color: red;
+}
+
+.test-incomplete {
+	color: gray;
+	font-color: gray;
+}
+
+.test-working {
+	font-weight: bold;
+}
+
+.nav { position: fixed !important; top: 0; left: 0; right: 0; }
+
+.padded { padding-top: 55px; }
+
+.logo {
+	margin: 10px;
+	width: 300px;
+}

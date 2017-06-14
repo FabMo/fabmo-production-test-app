@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FabMo Test App</title>
+  <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="node_modules/bulma/css/bulma.css">
+  <style type="text/css">
+    body {
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    }
+  </style>
+</head>
+<body>    
+  <nav class="nav">
+    <div class="nav-left">
+      <div class="nav-item">
+          <p class="control">
+            <a class="button is-danger" id="btn-nav-left" style="visibility: hidden">
+              <span class="icon">
+                <i class="fa fa-arrow-left"></i>
+              </span>
+              <span class="text">Left</span>
+            </a>
+          </p>
+      </div>
+    </div>
+    <div class="nav-center">
+      <div class="nav-item has-text-centered" id="txt-nav">
+        &nbsp;
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="nav-item">
+        <div class="field is-grouped">
+          <p class="control">
+            <a class="button is-success" id="btn-nav-right" style="visibility: hidden">
+              <span class="text">Right</span>
+              <span class="icon">
+                <i class="fa fa-arrow-right" id="icon-btn-nav-right"></i>
+              </span>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div id="screen-home" class="screen" style="display:none;">
+    <section class="hero is-fullheight">
+      <div class="hero-body">
+        <div class="container">
+          <div class="columns is-vcentered">
+            <div class="column is-6 is-offset-3">
+              <div class="has-text-centered">
+              <img src="images/shopbot-logo.png" class="logo">
+              </div>
+              <div class="box">
+                <label class="label is-large">Work Order Number:</label>
+                <div class="field is-grouped">
+                  <p class="control is-expanded">
+                    <input class="input is-large" type="number" placeholder="">
+                  </p>
+
+                  <p class="control">
+                    <button class="button is-large" id="btn-wo-list">
+                      <span class="icon">
+                        <i class="fa fa-list"></i>
+                      </span>
+                    </button>
+                  </p>
+                </div>
+                  <p class="control is-expanded">
+                    <button class="button is-large is-success" style="width: 100%" id="btn-wo-go">
+                      <span>Run Test</span>
+                      <span class="icon">
+                        <i class="fa fa-cube"></i>
+                      </span>
+                    </button>
+                  </p>                  
+
+              </div>
+              <!--
+              <p class="has-text-centered">
+                <a href="#">Help Link Maybe?</a>
+              </p>
+              -->
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div id="screen-workorder-select" class="screen" style="display: none; ">
+  <!--
+    <table class="table is-bordered">
+      <thead>
+        <tr>
+          <th>Work Order #</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>WO-1234</td>
+          <td>96x48 Gantry Beam</td>
+        </tr>
+      </tbody>
+    </table>
+  -->
+  <p class="title has-text-centered" style="margin-top:100px;">Work order selection is unavailable.</p>
+  </div>
+
+  <div id="screen-test-menu" class="screen" style="display: none;">
+    <section class="hero is-fullheight">
+      <div class="hero-body">
+        <div class="container">
+          <div class="columns is-vcentered">
+            <div class="column is-6 is-offset-3">
+          
+              <nav class="panel">
+                <p class="panel-heading" id="txt-test-title">
+                &nbsp;
+                </p>
+                <div id="test-menu-list">
+                </div>
+                <a class="panel-block">
+                  <p class="control">
+                    <button class="button is-medium is-success is-outlined" style="width: 100%" id="btn-test-done">
+                      <span class="icon">
+                        <i class="fa fa-check"></i>
+                      </span>
+                      <span class="text">Done</span>
+                    </button>
+                  </p>
+                </a>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+ </div>
+
+  <script type="text/javascript" src="js/lib/fabmo.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="tests/tests.js"></script>
+  
+  <script type="text/javascript">
+    (function() {
+      init();
+    })();
+    
+  </script>
+
+</body>
+</html>

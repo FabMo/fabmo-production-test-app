@@ -1,0 +1,15 @@
+
+{
+	"name":"Beam Test",
+	"license":"MIT",
+	"main":"./index.html",
+	"icon":"icon.png",
+	"icon_color":"#171b60",
+	"version":"0.0.1",
+	"author":"Ryan Sturmer",
+	"description":"Production Tests",
+	"devDependencies": {
+    	"grunt": "^0.4.5",
+    	"grunt-zip": "^0.17.1"
+  	}
+}
