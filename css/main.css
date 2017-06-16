@@ -23,3 +23,7 @@
 	margin: 10px;
 	width: 300px;
 }
+
+.panel .panel-block {
+	font-size: 1.5rem !important;
+}

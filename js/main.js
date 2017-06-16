@@ -3,42 +3,8 @@ testInProgress = false;
 
 var fabmo = new FabMoDashboard()
 
-// Super cool pyramid of death for running shopbot code as a test
-function doSBP(sbpCode, name) {
-	name = name || 'test.sbp'
-	return new Promise(function(fulfill, reject) {
-		fabmo.clearJobQueue(function() {
-			fabmo.submitJob({file : sbpCode, filename : name}, {
-					stayHere : true
-				}, function(err, data) {
-					if(err) {
-						console.error(err);
-						return reject(err);
-					}
-					var jobId = data.jobs[0]._id;
-					fabmo.on('status', function(status) {
-						if(status.state === 'idle') {
-							fabmo.getJobInfo(jobId, function(err, info) {
-								switch(info.state) {
-									case 'finished':
-										fabmo.off('status');
-										return fulfill();
-										break;
-									case 'failed':
-										fabmo.off('status');
-										return reject();
-										break;
-									default:
-									break;
-								}
-							});
-						}
-					});
-					fabmo.runNext();
-			});
-		});
-	});	
-}
+var okButtonHandler = null;
+var cancelButtonHandler = null;
 
 function registerTest(test) {
 	tests.push(test);
@@ -49,14 +15,14 @@ function addTestMenuItem(test) {
 	var item = document.createElement('a')
 	item.className = 'panel-block'
 	var span = document.createElement('span')
-	span.className = 'panel-icon'
+	span.className = 'panel-icon is-large'
 	
 	var icon = document.createElement('i')
 	icon.className = 'fa fa-circle'
 	span.appendChild(icon)
 	item.appendChild(span)
 	
-	var label = document.createElement('div');
+	var label = document.createElement('h1');
 	label.appendChild(document.createTextNode(test.name))
 	item.appendChild(label);
 
@@ -109,13 +75,27 @@ function runTest(test) {
 	if(testInProgress) {
 		throw new Error('Cannot start test.  A test is already in progress.');
 	}
+	var test_output = {
+		name : test.name,
+		description : test.description,
+		start_time : new Date()
+	}
+
 	activateTest(test);
 	test.f().then(
-		function pass() {
+		function resolve(data) {
+			test_output.end_time = new Date()
+			test_output.state = 'pass'
+			test_output.result = data
 			passTest(test);
+			console.info(test_output)
 		},
-		function fail() {
+		function reject(error) {
+			test_output.end_time = new Date()
+			test_output.state = 'fail'
+			test_output.data = error.message || error
 			failTest(test);
+			console.info(test_output)
 	});
 }
 
@@ -209,6 +189,45 @@ function initHomeScreen(options) {
 	listButton.addEventListener('click', function(evt) {
 		resetTests();
 		goTestMenu();
+	});
+}
+
+function closeModal(ok) {
+	var modal = document.getElementById('modal')
+	okButton.removeEventListener('click', okButtonHandler)
+	cancelButton.removeEventListener('click', cancelButtonHandler)
+	modal.className = 'modal';			
+	if(okButtonHandler) {
+		if(ok) {
+			okButtonHandler(ok);
+		}
+	}
+	if(cancelButtonHandler) {
+		if(!ok) {
+			cancelButtonHandler(new Error('cancel'));
+		}
+	}
+}
+
+function doModal(options) {
+	options = options || {};
+	return new Promise(function(fulfill, reject) {
+		var modal = document.getElementById('modal')
+		okButton = document.getElementById('btn-modal-ok');
+		cancelButton = document.getElementById('btn-modal-cancel');
+		okButtonHandler = function(arg) {
+			fulfill(arg);
+		}
+		cancelButtonHandler = function(arg) {
+			reject(arg);
+		}
+		okButton.addEventListener('click',function(evt) {closeModal(true)});
+		cancelButton.addEventListener('click',function(evt) {closeModal(false)});
+		
+		document.getElementById('txt-modal-message').innerHTML = options.message || '&nbsp;';
+		document.getElementById('txt-modal-title').innerHTML = options.title || '&nbsp;';
+
+		modal.className = 'modal is-active'
 	});
 }
 
