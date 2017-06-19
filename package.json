@@ -1,15 +1,19 @@
-
 {
-	"name":"Beam Test",
-	"license":"MIT",
-	"main":"./index.html",
-	"icon":"icon.png",
-	"icon_color":"#171b60",
-	"version":"0.0.1",
-	"author":"Ryan Sturmer",
-	"description":"Production Tests",
-	"devDependencies": {
-    	"grunt": "^0.4.5",
-    	"grunt-zip": "^0.17.1"
-  	}
+  "name": "fabmo-production-test-app",
+  "license": "MIT",
+  "main": "./index.html",
+  "icon": "icon.png",
+  "icon_color": "#171b60",
+  "version": "0.0.1",
+  "author": "Ryan Sturmer",
+  "description": "Production Tests",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-zip": "^0.17.1"
+  },
+  "dependencies": {
+    "bulma": "^0.4.2",
+    "font-awesome": "^4.7.0",
+    "fontawesome": "^4.7.2"
+  }
 }

@@ -74,3 +74,31 @@ registerTest({
 	}
 });
 
+registerTest({
+	name : 'Z-Zero Wiring',
+	description : 'Confirm that the input wiring for the Z-Zero connector is correct.',
+	f : function() {
+		var onStatus = function(status) {
+			try {
+				if(status.in1) {
+					closeModal(true); // Pass
+				}
+			} catch(e) {
+				closeModal(false); // Fail
+			}
+		}
+		fabmo.on('status', onStatus);
+		var p = doModal({
+			title:'Connect Z-Zero Jumper', 
+			message:'Connect the short jumper to the z-zero plate connector.  This message will close when the jumper is detected.',
+			image:'tests/images/zzero-plug.jpg',
+			hideOk : true,
+			onCancel: function() {
+				fabmo.off('status', onStatus);
+			}
+		})
+
+		// Return the promise for the modal, which resolves when either the input is detected, or the user cancels.
+		return p;
+	}
+})

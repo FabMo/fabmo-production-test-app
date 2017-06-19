@@ -58,4 +58,4 @@ $ypcheck=$yp-&ystart
 JY,$yn + ($yp - $yn)/2.0
 
 &ytravel = $yp-$yn
-PAUSE "yncheck=" + $yncheck + " ypcheck=" + $ypcheck + " yn=" + $yn + " yp=" + $yp
+'PAUSE "yncheck=" + $yncheck + " ypcheck=" + $ypcheck + " yn=" + $yn + " yp=" + $yp

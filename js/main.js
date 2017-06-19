@@ -213,12 +213,26 @@ function doModal(options) {
 	options = options || {};
 	return new Promise(function(fulfill, reject) {
 		var modal = document.getElementById('modal')
+		var imgCard = document.getElementById('modal-image')
+		if(options.image) {
+			document.getElementById('img-modal').src = options.image
+			imgCard.style.display = 'block';
+		} else {
+			document.getElementById('img-modal').src = ''
+			imgCard.style.display = 'none';
+		}
 		okButton = document.getElementById('btn-modal-ok');
 		cancelButton = document.getElementById('btn-modal-cancel');
+		
+		okButton.style.display = options.hideOk ? 'none' : 'block'
+		cancelButton.style.display = options.hideCancel ? 'none' : 'block'
+		
 		okButtonHandler = function(arg) {
+			(options.onOk || function() {})()
 			fulfill(arg);
 		}
 		cancelButtonHandler = function(arg) {
+			(options.onCancel || function() {})()
 			reject(arg);
 		}
 		okButton.addEventListener('click',function(evt) {closeModal(true)});
