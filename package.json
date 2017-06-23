@@ -7,10 +7,6 @@
   "version": "0.0.1",
   "author": "Ryan Sturmer",
   "description": "Production Tests",
-  "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-zip": "^0.17.1"
-  },
   "dependencies": {
     "bulma": "^0.4.2",
     "font-awesome": "^4.7.0",
