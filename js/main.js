@@ -121,31 +121,6 @@ function showScreen(id) {
 	document.getElementById(id).style.display='block';
 }
 
-function setupButton(id, options) {
-	options = options || {};
-	var btn = document.getElementById(id);
-	var icon = btn.getElementsByClassName('icon');
-	var text = btn.getElementsByClassName('text');
-	icon = icon.length > 0 ? icon[0].getElementsByTagName('i')[0] : null
-	text = text.length > 0 ? text[0] : null
-
-	if(btn) {
-		if(text && options.text) { text.innerHTML = options.text; }
-		if(icon && options.icon) { icon.className =  'fa ' + options.icon;}
-		if(options.visible) {
-			btn.style.visibility = 'visible';
-		} else {
-			btn.style.visibility = 'hidden'
-		}		
-		if(options.click) {
-			var new_btn = btn.cloneNode(true);
-			btn.parentNode.replaceChild(new_btn, btn);
-			new_btn.addEventListener('click', options.click)
-		}
-
-	}
-}
-
 function setupButtons(buttons) {
 	buttons = buttons || {};
 	for(var id in buttons) {
@@ -192,58 +167,6 @@ function initHomeScreen(options) {
 	});
 }
 
-function closeModal(ok) {
-	var modal = document.getElementById('modal')
-	okButton.removeEventListener('click', okButtonHandler)
-	cancelButton.removeEventListener('click', cancelButtonHandler)
-	modal.className = 'modal';			
-	if(okButtonHandler) {
-		if(ok) {
-			okButtonHandler(ok);
-		}
-	}
-	if(cancelButtonHandler) {
-		if(!ok) {
-			cancelButtonHandler(new Error('cancel'));
-		}
-	}
-}
-
-function doModal(options) {
-	options = options || {};
-	return new Promise(function(fulfill, reject) {
-		var modal = document.getElementById('modal')
-		var imgCard = document.getElementById('modal-image')
-		if(options.image) {
-			document.getElementById('img-modal').src = options.image
-			imgCard.style.display = 'block';
-		} else {
-			document.getElementById('img-modal').src = ''
-			imgCard.style.display = 'none';
-		}
-		okButton = document.getElementById('btn-modal-ok');
-		cancelButton = document.getElementById('btn-modal-cancel');
-		
-		okButton.style.display = options.hideOk ? 'none' : 'block'
-		cancelButton.style.display = options.hideCancel ? 'none' : 'block'
-		
-		okButtonHandler = function(arg) {
-			(options.onOk || function() {})()
-			fulfill(arg);
-		}
-		cancelButtonHandler = function(arg) {
-			(options.onCancel || function() {})()
-			reject(arg);
-		}
-		okButton.addEventListener('click',function(evt) {closeModal(true)});
-		cancelButton.addEventListener('click',function(evt) {closeModal(false)});
-		
-		document.getElementById('txt-modal-message').innerHTML = options.message || '&nbsp;';
-		document.getElementById('txt-modal-title').innerHTML = options.title || '&nbsp;';
-
-		modal.className = 'modal is-active'
-	});
-}
 
 
 function init(options) {

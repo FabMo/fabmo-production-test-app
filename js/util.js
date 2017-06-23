@@ -32,6 +32,7 @@ function doSBP(sbpCode, name) {
 				}, function(err, data) {
 					if(err) {
 						console.error(err);
+						fabmo.notify('err', err);
 						return reject(err);
 					}
 					var jobId = data.jobs[0]._id;

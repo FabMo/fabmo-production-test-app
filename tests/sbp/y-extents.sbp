@@ -1,16 +1,16 @@
 &input=3
-&length=24.8
-&extra=1.0
+&max_length=80.0
+&jog_length=40.0
 
 ' Search for the negative end of travel
-PY,%(2)-&length-&extra,2,&input
+PY,%(2)-&max_length,2,&input
 PAUSE 0.1
 
 ' Back off
 JY,%(2)+0.5
 
 ' Search again slowly
-PY,%(2)-&extra,0.1,&input
+PY,%(2)-1.0,0.1,&input
 PAUSE 0.1
 
 ' Back off again
@@ -20,7 +20,7 @@ JY,%(2)+0.5
 &ystart=%(2)
 
 ' Search one more time, slowly, this is a measurement
-PY,&ystart-1,0.1,&input
+PY,&ystart-1.0,0.1,&input
 PAUSE 0.1
 
 ' Record the distance to the switch (ycheck = 0.5)
@@ -28,17 +28,17 @@ $yn = %(2)
 $yncheck=$yn-&ystart
 
 ' Jog most of the way to the other end of the table
-JY,%(2)+&length-&extra
+JY,%(2)+&jog_length
 PAUSE 0.1
 
 ' Search for the positive end of travel
-PY,%(2)+&extra*2,2,&input
+PY,%(2)+(&max_length-&jog_length)+1.0,2,&input
 PAUSE 0.1
 
 ' Back off
 JY,%(2)-0.5
 
-' Search again, slowwly
+' Search again, slowly
 PY,%(2)+1.0,0.1,&input
 PAUSE 0.1
 
@@ -59,3 +59,4 @@ JY,$yn + ($yp - $yn)/2.0
 
 &ytravel = $yp-$yn
 'PAUSE "yncheck=" + $yncheck + " ypcheck=" + $ypcheck + " yn=" + $yn + " yp=" + $yp
+

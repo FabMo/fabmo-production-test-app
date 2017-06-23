@@ -9,7 +9,7 @@ $zpcheck = 0			' The output of this routine, which is the fixed distance measure
 $zp = 0
 
 ' Do an initial back off (in case we're already on the switch) 
-JZ,%(3)-0.5
+' JZ,%(3)-0.5 ' Actually don't do this, because the Z is almost always going to be sitting on the table
 
 ' TODO: check to make sure the switch isn't already tripped
 

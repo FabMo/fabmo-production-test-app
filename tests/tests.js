@@ -102,3 +102,32 @@ registerTest({
 		return p;
 	}
 })
+
+registerTest({
+	name : 'Stop Button (Standard Only)',
+	description : 'Confirm that the input wiring for stop button is correct.',
+	f : function() {
+		var onStatus = function(status) {
+			try {
+				if(status.in4) {
+					closeModal(true); // Pass
+				}
+			} catch(e) {
+				closeModal(false); // Fail
+			}
+		}
+		fabmo.on('status', onStatus);
+		var p = doModal({
+			title:'Press Stop Button', 
+			message:'Press the stop button at the end of the gantry.  You do not need to perform this test for alpha tools.',
+			image:'tests/images/stop-button-standard.jpg',
+			hideOk : true,
+			onCancel: function() {
+				fabmo.off('status', onStatus);
+			}
+		})
+
+		// Return the promise for the modal, which resolves when either the input is detected, or the user cancels.
+		return p;
+	}
+})
