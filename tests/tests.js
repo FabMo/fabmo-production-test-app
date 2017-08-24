@@ -55,17 +55,21 @@ registerTest({
 								var ypcheck = data.opensbp.variables.ypcheck;
 								var yncheck = data.opensbp.variables.yncheck;
 
-								if(Math.abs(ypcheck-0.5) > 0.005) {
+								if(Math.abs(Math.abs(ypcheck)-0.5) > 0.010) {
 									var e = new Error('Proximity switch distance discrepancy too great at positive stop: ' + Math.abs(ypcheck))
 									return reject(e)
 								}
 
-								if(Math.abs(yncheck-0.5) > 0.005) {
+								if(Math.abs(Math.abs(yncheck)-0.5) > 0.010) {
 									var e = new Error('Proximity switch distance discrepancy too great at negative stop: ' + Math.abs(yncheck))
 									return reject(e)
 								}
 
-								resolve({dist : dist});
+								resolve({
+									dist : Math.abs(yp-yn),
+									ypcheck : ypcheck,
+									yncheck : yncheck
+								});
 							} catch(e) {
 								reject(e);
 							}						

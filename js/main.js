@@ -2,7 +2,7 @@ var tests = []
 testInProgress = false;
 currentWorkOrderNumber = null;
 var appSettings = {
-	testGroup : 'indexer'
+	testGroup : 'gantry'
 };
 
 var fabmo = new FabMoDashboard()
@@ -203,13 +203,14 @@ function initHomeScreen(options) {
 
 		currentWorkOrderNumber = workOrderNumberField.value;
 		if(currentWorkOrderNumber) {
-			workOrderNumberField.className = 'input is-large'
-			workOrderNumberFieldIcon.display = 'none';
 			resetTests();
 			goTestMenu();
 		} else {
-			workOrderNumberField.className = 'input is-large is-danger'
-			workOrderNumberFieldIcon.display = 'block'
+			doModal({
+				title:'Need Work Order Number', 
+				message:'You must enter a work-order number to run a test.',
+				hideCancel : true,
+			});
 		}
 
 	});
@@ -221,18 +222,27 @@ function initHomeScreen(options) {
 }
 
 function initSettingsScreen() {
+	var testGroupSelect = document.getElementById( "test-select" );
+	
+	for(var i=0; i<testGroupSelect.options.length; i++) {
+		if(testGroupSelect.options[i].value === appSettings.testGroup) {
+			testGroupSelect.selectedIndex = i;
+		}
+	}
+	
 	settingsOkButton = document.getElementById('btn-settings-ok');
 	settingsOkButton.addEventListener('click', function(evt) {
-		var testGroupSelect = document.getElementById( "test-select" );
 		appSettings.testGroup = testGroupSelect.options[testGroupSelect.selectedIndex].value
 		saveConfig();
 		setupTestMenu();
 		goHome();	
 	});
 }
-function loadConfig() {
+function loadConfig(callback) {
 	fabmo.getAppConfig(function(err, cfg) {
 		appSettings = cfg;
+		console.log(appSettings);
+		(callback || function() {})()
 	});
 }
 
@@ -244,9 +254,10 @@ function saveConfig() {
 
 function init(options) {
 	options = options || {};
-	loadConfig();
-	setupTestMenu();
-	initHomeScreen(options);
-	initSettingsScreen();
-	showScreen('screen-home');
+	loadConfig(function() {
+		setupTestMenu();
+		initHomeScreen(options);
+		initSettingsScreen();
+		showScreen('screen-home');		
+	});
 }
