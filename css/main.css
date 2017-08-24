@@ -27,3 +27,7 @@
 .panel .panel-block {
 	font-size: 1.5rem !important;
 }
+
+.screen {
+	display: none;
+}

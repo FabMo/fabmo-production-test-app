@@ -16,6 +16,7 @@
   </style>
 </head>
 <body>    
+
 <div class="modal" id="modal">
   <div class="modal-background"></div>
   <div class="modal-card">
@@ -86,8 +87,11 @@
               <div class="box">
                 <label class="label is-large">Work Order Number:</label>
                 <div class="field is-grouped">
-                  <p class="control is-expanded">
-                    <input class="input is-large" type="number" placeholder="">
+                  <p class="control is-expanded has-icons-right">
+                    <input class="input is-large" placeholder="Work Order #" id="txt-wo-number">
+                      <span class="icon is-right" style="display:none;" id="txt-wo-number-icon">
+                        <i class="fa fa-warning"></i>
+                      </span>
                   </p>
 
                   <p class="control">
@@ -107,6 +111,15 @@
                     </button>
                   </p>                  
 
+                  <p class="control is-expanded">
+                    <button class="button is-large" style="width: 100%; margin-top: 10px" id="btn-settings-go">
+                      <span>Settings</span>
+                      <span class="icon">
+                        <i class="fa fa-cog"></i>
+                      </span>
+                    </button>
+                  </p>                  
+
               </div>
               <!--
               <p class="has-text-centered">
@@ -118,6 +131,51 @@
         </div>
       </div>
   </div>
+
+<div id="screen-settings" class="screen">
+    <section class="hero is-fullheight">
+      <div class="hero-body">
+        <div class="container">
+          <div class="columns is-vcentered">
+            <div class="column is-8 is-offset-2">
+              <nav class="panel is-large">
+                <p class="panel-heading">
+                  Settings
+                </p>
+                <div class="panel-block">
+                  <div class="field is-horizontal">
+                    <div class="field-label">
+                      <label class="label" style="white-space: nowrap;">Test Selection</label>
+                    </div>
+                    <div class="field-body">
+                      <div class="control">
+                        <div class="select">
+                          <select id="test-select">
+                            <option value="gantry">Gantry Assembly</option>
+                            <option value="indexer">Indexer</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="panel-block">
+                    <button class="button is-large is-success" style="width: 100%;" id="btn-settings-ok">
+                      <span>Ok</span>
+                      <span class="icon">
+                        <i class="fa fa-check"></i>
+                      </span>
+                    </button>
+
+                </div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+ </div>
+
 
   <div id="screen-workorder-select" class="screen" style="display: none; ">
   <!--
@@ -170,6 +228,28 @@
     </section>
  </div>
 
+
+<script type="text/javascript">;
+  var keen = null;
+  !function(name,path,ctx){
+    var latest,prev=name!=='Keen'&&window.Keen?window.Keen:false;ctx[name]=ctx[name]||{ready:function(fn){var h=document.getElementsByTagName('head')[0],s=document.createElement('script'),w=window,loaded;s.onload=s.onerror=s.onreadystatechange=function(){if((s.readyState&&!(/^c|loade/.test(s.readyState)))||loaded){return}s.onload=s.onreadystatechange=null;loaded=1;latest=w.Keen;if(prev){w.Keen=prev}else{try{delete w.Keen}catch(e){w.Keen=void 0}}ctx[name]=latest;ctx[name].ready(fn)};s.async=1;s.src=path;h.parentNode.insertBefore(s,h)}}
+  }('KeenAsync','https://d26b395fwzu5fz.cloudfront.net/keen-tracking-1.1.3.min.js',this);
+
+  KeenAsync.ready(function(){
+    // Configure a client instance
+    // This is your actual Project ID and Write Key
+    var client = new KeenAsync({
+      projectId: '59973348c9e77c0001ce0f65',
+      writeKey: '9026508F7BAFB443886279B833E7B25642CF7B0276D37F75E1FDFDFD68C30A7801A3D73888699C9D1286172B58681230B6E9D27034043EF4C7EA68FFBC189DC93138D281453BB452823A1FA2C976B360A644ACCF753E238CA7431DF37255E675'
+    });
+    keen = client;
+    // Record an event
+//    client.recordEvent('pageviews', {
+//      title: document.title
+//    });
+  });
+</script>
+
   <script type="text/javascript" src="js/lib/fabmo.js"></script>
   <script type="text/javascript" src="js/ui.js"></script>
   <script type="text/javascript" src="js/util.js"></script>
@@ -184,6 +264,5 @@
     })();
     
   </script>
-
 </body>
 </html>

@@ -28,6 +28,9 @@ function doModal(options) {
 		okButton.style.display = options.hideOk ? 'none' : 'block'
 		cancelButton.style.display = options.hideCancel ? 'none' : 'block'
 		
+		okButton.innerHTML = options.okText || 'Ok'
+		cancelButton.innerHTML = options.cancelText || 'Cancel'
+
 		okButtonHandler = function(arg) {
 			(options.onOk || function() {})()
 			fulfill(arg);

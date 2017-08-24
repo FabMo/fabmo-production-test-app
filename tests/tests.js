@@ -1,4 +1,5 @@
 registerTest({
+	group : 'gantry',
 	name : 'Z Extents',
 	description : 'Confirm correct operation of the Z prox switch, wiring, and Z travel',
 	f : function() {
@@ -32,6 +33,7 @@ registerTest({
 });
 
 registerTest({
+	group : 'gantry',
 	name : 'Y Extents',
 	description : 'Confirm correct operation of the Y prox switch, wiring, and Y travel',
 	f : function() {
@@ -75,6 +77,7 @@ registerTest({
 });
 
 registerTest({
+	group : 'gantry',
 	name : 'Z-Zero Wiring',
 	description : 'Confirm that the input wiring for the Z-Zero connector is correct.',
 	f : function() {
@@ -104,6 +107,7 @@ registerTest({
 })
 
 registerTest({
+	group : 'gantry',
 	name : 'Stop Button (Standard Only)',
 	description : 'Confirm that the input wiring for stop button is correct.',
 	f : function() {
@@ -126,6 +130,74 @@ registerTest({
 				fabmo.off('status', onStatus);
 			}
 		})
+
+		// Return the promise for the modal, which resolves when either the input is detected, or the user cancels.
+		return p;
+	}
+})
+
+
+registerTest({
+	group : 'indexer',
+	name : 'Motor, Driver and Cable',
+	description : 'Confirm that cable and driver are correctly wired',
+	f : function() {
+		return doModal({
+			title:'Connect Driver and Cable', 
+			message:'Connect the driver and cable as shown.',
+			image:'tests/images/indexer-hookup.png'//,
+			//hideOk : true
+		}).then(
+			function resolve() {
+				fabmo.runSBP('ZX\nMX,10000', );
+				return Promise.resolve();
+			}
+		)
+		.then(
+			function resolve() {
+				return doModal({
+					title:'Clockwise (Slow)', 
+					message:'Is the motor moving smoothly in the clockwise direction?',
+					okText : 'Yes',
+					cancelText : 'No'
+					//image:'tests/images/stop-button-standard.jpg'//,
+					//hideOk : true
+				})
+			}
+		)
+		.then(
+			function resolve() {
+				fabmo.runSBP('ZX\nMX,-10000', );
+				return Promise.resolve();
+			}
+		)
+		.then(
+			function resolve() {
+				return doModal({
+					title:'Clockwise (Slow)', 
+					message:'Is the motor moving smoothly in the counter-clockwise direction?',
+					okText : 'Yes',
+					cancelText : 'No'
+					//image:'tests/images/stop-button-standard.jpg'//,
+					//hideOk : true
+				})
+			}
+		)
+		.then(
+			function resolve() {
+				fabmo.quit();
+			}
+		)
+		.then(
+			function resolve() {
+				return doModal({
+					title:'Observe counterclockwise motion', 
+					message:'Watch the motor for counterclockwise motion.',
+					image:'tests/images/stop-button-standard.jpg'//,
+//					hideOk : true
+				});
+			}
+		);;
 
 		// Return the promise for the modal, which resolves when either the input is detected, or the user cancels.
 		return p;
