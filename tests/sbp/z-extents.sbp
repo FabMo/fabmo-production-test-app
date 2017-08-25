@@ -14,7 +14,7 @@ $zp = 0
 ' TODO: check to make sure the switch isn't already tripped
 
 ' Search for the switch 
-PZ,&zsearch,1,&zin
+PZ,%(3)+&zsearch,1,&zin
 PAUSE 0.1
 
 ' Back off
