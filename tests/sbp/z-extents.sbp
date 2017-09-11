@@ -2,6 +2,7 @@
 
 ' Settings
 &zin = 5  				' The input switch that corresponds to the Z prox switch
+&zplate = 1				' The input switch that corresponds to the Z plate
 &zsearch = 26			' The expected search distance
 
 ' Outputs (these are the persistent variables that are read out by the test app)
@@ -15,26 +16,21 @@ $zp = 0
 
 ' Search for the switch 
 PZ,%(3)+&zsearch,1,&zin
-PAUSE 0.1
 
 ' Back off
 JZ,%(3)-0.5
-PAUSE 0.1
 
 ' Approach, slowly
 PZ,%(3)+1,0.1,&zin
-PAUSE 0.1
 
 ' Back off
 JZ,%(3)-0.5
-PAUSE 0.1
 
 ' Record the initial position
 &zstart = %(3)
 
 ' Final approach, slowly this time is a measurement
 PZ,%(3)+1,0.1,&zin
-PAUSE 0.1
 
 ' Record final position
 $zp=%(3)
@@ -43,4 +39,28 @@ $zpcheck=$zp-&zstart
 ' Back off 
 JZ,%(3)-1.0
 
+' Head for the plate
+PZ,%(3)-&zsearch,0.5,&zplate
+
+' Back off
+JZ,%(3)+0.5
+
+' Approach, slowly
+PZ,%(3)-1,0.1,&zplate
+
+' Back off
+JZ,%(3)+0.5
+
+' Record the initial position
+&zstart = %(3)
+
+' Final approach, slowly this time is a measurement
+PZ,%(3)-1,0.1,&zplate
+
+' Record final position
+$zn=%(3)
+$zncheck=&zstart-$zn
+
+' Jog to a sane place
+JZ,%(3)+4.0
 END

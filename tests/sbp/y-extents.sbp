@@ -25,7 +25,7 @@ PAUSE 0.1
 
 ' Record the distance to the switch (ycheck = 0.5)
 $yn = %(2)
-$yncheck=$yn-&ystart
+$yncheck=&ystart-$yn
 
 ' Jog most of the way to the other end of the table
 JY,%(2)+&jog_length
@@ -40,7 +40,6 @@ JY,%(2)-0.5
 
 ' Search again, slowly
 PY,%(2)+1.0,0.1,&input
-PAUSE 0.1
 
 ' Back off
 JY,%(2)-0.5
@@ -50,7 +49,6 @@ JY,%(2)-0.5
 
 ' Search again, slowly, this is a measurement
 PY,%(2)+1.0,0.1,&input
-PAUSE 0.1
 
 $yp = %(2)
 $ypcheck=$yp-&ystart

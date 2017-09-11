@@ -4,7 +4,11 @@ registerTest({
 	description : 'Confirm correct operation of the Z prox switch, wiring, and Z travel',
 	f : function() {
 		var test_result = {}
-		return doModal({title:'Moving Z Axis', message:'Preparing to move the Z.  Make sure the area is clear.'})
+
+		return doModal({
+			title:'Moving Z Axis', 
+			message:'Place the Z-Zero plate underneath the spindle plate, attach the alligator clip to the spindle plate, and connect the Z-Zero cable assembly to the connector on the Y-Z car.  Make sure the deck is clear of obstruction before continuing.',
+			image: 'tests/images/zzero-plate.jpg'})
 			.then(
 				function resolve() {
 					return doSBPURL('tests/sbp/z-extents.sbp');
@@ -14,14 +18,27 @@ registerTest({
 				function resolve() {
 					return new Promise(function(resolve, reject) {
 						fabmo.getConfig(function(err, data) {
-							if(err) { reject(err); }
+							if(err) { return reject(err); }
+								var zp = data.opensbp.variables.zp;
+								var zn = data.opensbp.variables.zn;
+								var zpcheck = data.opensbp.variables.zpcheck;
+								var zncheck = data.opensbp.variables.zncheck;
+
 							try {								
-								var dist = data.opensbp.variables.zpcheck;
-								if(Math.abs(dist-0.5) > 0.005) {
-									var e = new Error('Proximity switch distance discrepancy too great: ' + dist)
+								if(Math.abs(Math.abs(zpcheck)-0.5) > 0.010) {
+									var e = new Error('Proximity switch distance discrepancy too great at positive stop: ' + Math.abs(ypcheck))
 									return reject(e)
 								}
-								resolve({dist : dist});
+
+								if(Math.abs(Math.abs(zncheck)-0.5) > 0.010) {
+									var e = new Error('Proximity switch distance discrepancy too great at negative stop: ' + Math.abs(yncheck))
+									return reject(e)
+								}
+								resolve({
+									dist : Math.abs(zp-zn).toFixed(3),
+									zpcheck : zpcheck.toFixed(3),
+									zncheck : zncheck.toFixed(3)
+								});
 							} catch(e) {
 								reject(e);
 							}						
@@ -38,6 +55,9 @@ registerTest({
 	description : 'Confirm correct operation of the Y prox switch, wiring, and Y travel',
 	f : function() {
 		var test_result = {}
+		var allowedBeamLengths = [60.0, 48.0, 72.0];
+		var overTravel = 1.4;
+		var allowedError = 0.5
 		return doModal({title:'Moving Y Axis', message:'Preparing to move the Y.  Make sure the area is clear.'})
 			.then(
 				function resolve() {
@@ -48,7 +68,7 @@ registerTest({
 				function resolve() {
 					return new Promise(function(resolve, reject) {
 						fabmo.getConfig(function(err, data) {
-							if(err) { reject(err); }
+							if(err) { return reject(err); }
 							try {								
 								var yp = data.opensbp.variables.yp;
 								var yn = data.opensbp.variables.yn;
@@ -66,9 +86,9 @@ registerTest({
 								}
 
 								resolve({
-									dist : Math.abs(yp-yn),
-									ypcheck : ypcheck,
-									yncheck : yncheck
+									dist : Math.abs(yp-yn).toFixed(3),
+									ypcheck : ypcheck.toFixed(3),
+									yncheck : yncheck.toFixed(3)
 								});
 							} catch(e) {
 								reject(e);
@@ -79,7 +99,7 @@ registerTest({
 			);
 	}
 });
-
+/*
 registerTest({
 	group : 'gantry',
 	name : 'Z-Zero Wiring',
@@ -108,7 +128,7 @@ registerTest({
 		// Return the promise for the modal, which resolves when either the input is detected, or the user cancels.
 		return p;
 	}
-})
+})*/
 
 registerTest({
 	group : 'gantry',

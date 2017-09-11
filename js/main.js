@@ -86,7 +86,8 @@ function runTest(test) {
 	var test_output = {
 		name : test.name,
 		description : test.description,
-		start_time : new Date()
+		start_time : new Date(),
+		group : test.group
 	}
 
 	activateTest(test);
@@ -100,6 +101,7 @@ function runTest(test) {
 			console.info(test_output);
 			if(keen) {
 				keen.recordEvent('test', test_output);
+				console.info(test_output);
 			}						
 		},
 		function reject(error) {
@@ -111,6 +113,7 @@ function runTest(test) {
 			console.info(test_output);
 			if(keen) {
 				keen.recordEvent('test', test_output);
+				console.info(test_output);
 			}						
 	});
 }
