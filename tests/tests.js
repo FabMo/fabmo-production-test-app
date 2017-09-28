@@ -160,6 +160,60 @@ registerTest({
 	}
 })
 
+function fabmoWaitForRunning(callback) {
+	return new Promise(function(fulfill, reject) {
+		function onStatus(stat) {
+			switch(stat.state) {
+				case 'running':
+					fabmo.off('status');
+					fulfill();
+					break;
+			}
+		};
+		fabmo.on('status', onStatus);
+	});
+}
+
+function fabmoQuit() {
+	return new Promise(function(fulfill, reject) {
+		function onStatus(stat) {
+			switch(stat.state) {
+				case 'running':
+					fabmo.stop();
+					break;
+				case 'idle':
+					fabmo.off('status');
+					fulfill();
+					break;
+				case 'paused':
+					fabmo.stop();
+					break;
+				}
+		}
+		fabmo.on('status', onStatus);
+	});
+}
+
+function fabmoWaitForRunning() {
+	return new Promise(function(fulfill, reject) {
+		var runningCount = 0
+		function onStatus(stat) {
+			switch(stat.state) {
+				case 'running':
+					if(runningCount > 3) {
+						fabmo.off('status');
+						fulfill();
+					} else {
+						console.log(runningCount)
+						runningCount++;
+					}
+					break;
+				}
+		}
+		fabmo.on('status', onStatus);
+	});
+
+}
 
 registerTest({
 	group : 'indexer',
@@ -173,57 +227,55 @@ registerTest({
 			//hideOk : true
 		}).then(
 			function resolve() {
-				fabmo.runSBP('ZX\nMX,10000', );
-				return Promise.resolve();
+				console.info("Running clockwise motion...")
+				fabmo.runGCode('G1 Y10000 F900');
+				return fabmoWaitForRunning();
 			}
 		)
 		.then(
 			function resolve() {
+				console.info("Prompting about clockwise motion...")
 				return doModal({
 					title:'Clockwise (Slow)', 
 					message:'Is the motor moving smoothly in the clockwise direction?',
 					okText : 'Yes',
-					cancelText : 'No'
-					//image:'tests/images/stop-button-standard.jpg'//,
+					cancelText : 'No',
+					image:'tests/images/3in-clockwise.jpg'//,
 					//hideOk : true
 				})
 			}
 		)
 		.then(
 			function resolve() {
-				fabmo.runSBP('ZX\nMX,-10000', );
-				return Promise.resolve();
+				console.info("Quitting from clockwise motion...")
+				return fabmoQuit();
 			}
 		)
 		.then(
 			function resolve() {
+				console.info("Running counterclockwise motion...")
+				fabmo.runGCode('G1 Y-10000 F900');
+				return fabmoWaitForRunning();
+			}
+		)
+		.then(
+			function resolve() {
+				console.info("Prompting about counterclockwise motion...")
 				return doModal({
-					title:'Clockwise (Slow)', 
+					title:'Counter-Clockwise (Slow)', 
 					message:'Is the motor moving smoothly in the counter-clockwise direction?',
 					okText : 'Yes',
-					cancelText : 'No'
-					//image:'tests/images/stop-button-standard.jpg'//,
+					cancelText : 'No',
+					image:'tests/images/3in-counterclockwise.jpg'//,
 					//hideOk : true
 				})
 			}
 		)
 		.then(
 			function resolve() {
-				fabmo.quit();
+				console.info("Quitting from counterclockwise motion...")
+				return fabmoQuit();
 			}
-		)
-		.then(
-			function resolve() {
-				return doModal({
-					title:'Observe counterclockwise motion', 
-					message:'Watch the motor for counterclockwise motion.',
-					image:'tests/images/stop-button-standard.jpg'//,
-//					hideOk : true
-				});
-			}
-		);;
-
-		// Return the promise for the modal, which resolves when either the input is detected, or the user cancels.
-		return p;
+		);
 	}
 })

@@ -2,7 +2,7 @@ var tests = []
 testInProgress = false;
 currentWorkOrderNumber = null;
 var appSettings = {
-	testGroup : 'gantry'
+	testGroup : 'indexer'
 };
 
 var fabmo = new FabMoDashboard()
@@ -242,11 +242,15 @@ function initSettingsScreen() {
 	});
 }
 function loadConfig(callback) {
-	fabmo.getAppConfig(function(err, cfg) {
-		appSettings = cfg;
-		console.log(appSettings);
+	if(fabmo.isPresent()) {
+		fabmo.getAppConfig(function(err, cfg) {
+			appSettings = cfg;
+			console.log(appSettings);
+			(callback || function() {})()
+		});		
+	} else {
 		(callback || function() {})()
-	});
+	}
 }
 
 function saveConfig() {

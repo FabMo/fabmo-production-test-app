@@ -49,14 +49,22 @@ function doModal(options) {
 	});
 }
 
+function clearAllListeners(id) {
+	var old_element = document.getElementById(id);
+	var new_element = old_element.cloneNode(true);
+	old_element.parentNode.replaceChild(new_element, old_element);
+}	
+
 /*
  * Close the modal dialog that is currently displayed
  * ok : If true, the modal will be dismissed as if "ok" was clicked, otherwise, it is as if "cancel" was clicked.
  */
 function closeModal(ok) {
 	var modal = document.getElementById('modal')
-	okButton.removeEventListener('click', okButtonHandler)
-	cancelButton.removeEventListener('click', cancelButtonHandler)
+
+	clearAllListeners('btn-modal-ok')
+	clearAllListeners('btn-modal-cancel')
+
 	modal.className = 'modal';			
 	if(okButtonHandler) {
 		if(ok) {
