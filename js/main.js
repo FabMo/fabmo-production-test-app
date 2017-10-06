@@ -26,16 +26,24 @@ function addTestMenuItem(test) {
 	span.appendChild(icon)
 	item.appendChild(span)
 	
-	var label = document.createElement('h1');
+	var label = document.createElement('div');
 	label.appendChild(document.createTextNode(test.name))
 	item.appendChild(label);
+	label.appendChild(document.createElement('br'));
+//	label.appendChild(document.createTextNode())
 
+	var reason = document.createElement('div');
+	reason.appendChild(document.createTextNode(''));
+	reason.className = 'reason';
+	label.appendChild(reason);
+
+	
 	document.getElementById('test-menu-list').appendChild(item)
 	item.addEventListener('click', function() {
 		runTest(test);
 	});
 
-	return {icon : icon, label : label}
+	return {icon : icon, label : label, reason : reason}
 }
 
 function removeAllTestMenuItems() {
@@ -63,11 +71,14 @@ function passTest(test) {
 	}	
 }
 
-function failTest(test) {
+function failTest(test, error) {
 	testInProgress = false;
 	if(test.ui) {
 		test.ui.icon.className = 'fa fa-times test-fail'
 		test.ui.label.className = 'test-fail'
+		if(error) {
+			test.ui.reason.innerHTML = error.message || error || "Unspecified error.";
+		}
 	}
 }
 function activateTest(test) {
@@ -109,7 +120,7 @@ function runTest(test) {
 			test_output.state = 'fail';
 			test_output.data = error.message || error;
 			test_output.work_order = currentWorkOrderNumber;
-			failTest(test);
+			failTest(test, error);
 			console.info(test_output);
 			if(keen) {
 				keen.recordEvent('test', test_output);

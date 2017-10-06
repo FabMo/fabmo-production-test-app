@@ -73,7 +73,7 @@ function closeModal(ok) {
 	}
 	if(cancelButtonHandler) {
 		if(!ok) {
-			cancelButtonHandler(new Error('cancel'));
+			cancelButtonHandler(new Error('Cancelled by user.'));
 		}
 	}
 }
