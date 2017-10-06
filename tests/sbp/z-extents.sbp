@@ -5,6 +5,11 @@
 &zplate = 1				' The input switch that corresponds to the Z plate
 &zsearch = 26			' The expected search distance
 
+$status = 0 
+
+' Bail in the case of being already on the prox switches
+IF %(55) == 1 THEN GOTO on_prox
+
 ' Outputs (these are the persistent variables that are read out by the test app)
 $zpcheck = 0			' The output of this routine, which is the fixed distance measured against the switch
 $zp = 0
@@ -14,7 +19,7 @@ $zp = 0
 
 ' TODO: check to make sure the switch isn't already tripped
 
-' Search for the switch 
+' Search for the switch
 PZ,%(3)+&zsearch,1,&zin
 
 ' Back off
@@ -64,3 +69,7 @@ $zncheck=&zstart-$zn
 ' Jog to a sane place
 JZ,%(3)+4.0
 END
+
+on_prox:
+	$status = 1
+	END

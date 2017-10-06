@@ -19,12 +19,24 @@ registerTest({
 					return new Promise(function(resolve, reject) {
 						fabmo.getConfig(function(err, data) {
 							if(err) { return reject(err); }
+
+							try {		
+
+								var status = data.opensbp.variables.status;
 								var zp = data.opensbp.variables.zp;
 								var zn = data.opensbp.variables.zn;
 								var zpcheck = data.opensbp.variables.zpcheck;
 								var zncheck = data.opensbp.variables.zncheck;
-
-							try {								
+								
+								switch(status) {
+									case 1:
+										fabmo.showDRO();
+										return reject("Proximity switch already triggered.  Move the Y-Axis off the target and run the test again.");
+										break;
+									default:
+										break;
+								}	
+								
 								if(Math.abs(Math.abs(zpcheck)-0.5) > 0.010) {
 									var e = new Error('Proximity switch distance discrepancy too great at positive stop: ' + Math.abs(ypcheck))
 									return reject(e)
@@ -69,11 +81,21 @@ registerTest({
 					return new Promise(function(resolve, reject) {
 						fabmo.getConfig(function(err, data) {
 							if(err) { return reject(err); }
-							try {								
+							try {							
+								var status = data.opensbp.variables.status;	
 								var yp = data.opensbp.variables.yp;
 								var yn = data.opensbp.variables.yn;
 								var ypcheck = data.opensbp.variables.ypcheck;
 								var yncheck = data.opensbp.variables.yncheck;
+
+								switch(status) {
+									case 1:
+										fabmo.showDRO();
+										return reject("Proximity switch already triggered.  Move the Y-Axis off the target and run the test again.");
+										break;
+									default:
+										break;
+								}
 
 								if(Math.abs(Math.abs(ypcheck)-0.5) > 0.010) {
 									var e = new Error('Proximity switch distance discrepancy too great at positive stop: ' + Math.abs(ypcheck))

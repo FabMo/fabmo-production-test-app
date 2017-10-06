@@ -2,6 +2,12 @@
 &max_length=80.0
 &jog_length=40.0
 
+$status = 0
+
+' Bail in the case of being already on the prox switches
+IF %(53) == 1 THEN GOTO on_prox
+
+
 ' Search for the negative end of travel
 PY,%(2)-&max_length,2,&input
 PAUSE 0.1
@@ -58,3 +64,6 @@ JY,$yn + ($yp - $yn)/2.0
 &ytravel = $yp-$yn
 'PAUSE "yncheck=" + $yncheck + " ypcheck=" + $ypcheck + " yn=" + $yn + " yp=" + $yp
 
+on_prox:
+	$status = 1
+	END
