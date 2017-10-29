@@ -1,23 +1,32 @@
 &input=3
 &max_length=80.0
 &jog_length=40.0
+&EPS = 0.002
 
-$status = 0
+' Statuses :
+' -1 - Test has not completed 
+'  0 - Test ran to completion, no error
+'  1 - Prox switch already triggered, tool needs to be moved off to continue
+'  2 - Target not found in search for prox switch
+
+$status = -1
 
 ' Bail in the case of being already on the prox switches
 IF %(53) == 1 THEN GOTO on_prox
 
 
 ' Search for the negative end of travel
-PY,%(2)-&max_length,2,&input
-PAUSE 0.1
+&target = %(2)-&max_length
+PY,&target,2,&input
+GOSUB check_target
 
 ' Back off
 JY,%(2)+0.5
 
 ' Search again slowly
-PY,%(2)-1.0,0.1,&input
-PAUSE 0.1
+&target=%(2)-1.0
+PY,&target,0.1,&input
+GOSUB check_target
 
 ' Back off again
 JY,%(2)+0.5
@@ -26,8 +35,9 @@ JY,%(2)+0.5
 &ystart=%(2)
 
 ' Search one more time, slowly, this is a measurement
-PY,&ystart-1.0,0.1,&input
-PAUSE 0.1
+&target=&ystart-1.0
+PY,&target,0.1,&input
+GOSUB check_target
 
 ' Record the distance to the switch (ycheck = 0.5)
 $yn = %(2)
@@ -35,17 +45,19 @@ $yncheck=&ystart-$yn
 
 ' Jog most of the way to the other end of the table
 JY,%(2)+&jog_length
-PAUSE 0.1
 
 ' Search for the positive end of travel
-PY,%(2)+(&max_length-&jog_length)+1.0,2,&input
-PAUSE 0.1
+&target = %(2)+(&max_length-&jog_length)+1.0
+PY,&target,2,&input
+GOSUB check_target
 
 ' Back off
 JY,%(2)-0.5
 
 ' Search again, slowly
-PY,%(2)+1.0,0.1,&input
+&target=%(2)+1.0
+PY,&target,0.1,&input
+GOSUB check_target
 
 ' Back off
 JY,%(2)-0.5
@@ -54,7 +66,9 @@ JY,%(2)-0.5
 &ystart=%(2)
 
 ' Search again, slowly, this is a measurement
-PY,%(2)+1.0,0.1,&input
+&target=%(2)+1.0
+PY,&target,0.1,&input
+GOSUB check_target
 
 $yp = %(2)
 $ypcheck=$yp-&ystart
@@ -62,8 +76,23 @@ $ypcheck=$yp-&ystart
 JY,$yn + ($yp - $yn)/2.0
 
 &ytravel = $yp-$yn
-'PAUSE "yncheck=" + $yncheck + " ypcheck=" + $ypcheck + " yn=" + $yn + " yp=" + $yp
+$status = 0
+
+END
+
+check_target:
+	&diff = %(2)-&target
+	IF &diff >= 0 THEN GOTO check_mag
+	&diff = -1*&diff
+	check_mag:
+		IF &diff < &EPS THEN GOTO missed_target
+		RETURN
 
 on_prox:
 	$status = 1
 	END
+
+missed_target:
+	$status = 2
+	END
+

@@ -4,11 +4,13 @@
 &zin = 5  				' The input switch that corresponds to the Z prox switch
 &zplate = 1				' The input switch that corresponds to the Z plate
 &zsearch = 26			' The expected search distance
+&EPS = 0.002
 
-$status = 0 
+$status = -1
 
 ' Bail in the case of being already on the prox switches
 IF %(55) == 1 THEN GOTO on_prox
+IF %(51) == 1 THEN GOTO on_plate
 
 ' Outputs (these are the persistent variables that are read out by the test app)
 $zpcheck = 0			' The output of this routine, which is the fixed distance measured against the switch
@@ -20,13 +22,17 @@ $zp = 0
 ' TODO: check to make sure the switch isn't already tripped
 
 ' Search for the switch
-PZ,%(3)+&zsearch,1,&zin
+&target=%(3)+&zsearch
+PZ,&target,1,&zin
+GOSUB check_target
 
 ' Back off
 JZ,%(3)-0.5
 
 ' Approach, slowly
-PZ,%(3)+1,0.1,&zin
+&target=%(3)+1
+PZ,&target,0.1,&zin
+GOSUB check_target
 
 ' Back off
 JZ,%(3)-0.5
@@ -35,7 +41,9 @@ JZ,%(3)-0.5
 &zstart = %(3)
 
 ' Final approach, slowly this time is a measurement
-PZ,%(3)+1,0.1,&zin
+&target=%(3)+1
+PZ,&target,0.1,&zin
+GOSUB check_target
 
 ' Record final position
 $zp=%(3)
@@ -45,13 +53,17 @@ $zpcheck=$zp-&zstart
 JZ,%(3)-1.0
 
 ' Head for the plate
-PZ,%(3)-&zsearch,0.5,&zplate
+&target=%(3)-&zsearch
+PZ,&target,0.5,&zplate
+GOSUB check_target
 
 ' Back off
 JZ,%(3)+0.5
 
 ' Approach, slowly
-PZ,%(3)-1,0.1,&zplate
+&target=%(3)-1.0
+PZ,&target,0.1,&zplate
+GOSUB check_target
 
 ' Back off
 JZ,%(3)+0.5
@@ -60,7 +72,9 @@ JZ,%(3)+0.5
 &zstart = %(3)
 
 ' Final approach, slowly this time is a measurement
-PZ,%(3)-1,0.1,&zplate
+&target=%(3)-1.0
+PZ,&target,0.1,&zplate
+GOSUB check_target
 
 ' Record final position
 $zn=%(3)
@@ -68,8 +82,28 @@ $zncheck=&zstart-$zn
 
 ' Jog to a sane place
 JZ,%(3)+4.0
+
+' Report the test as complete
+$status=0
+
 END
+
+check_target:
+	&diff = %(3)-&target
+	IF &diff >= 0 THEN GOTO check_mag
+	&diff = -1*&diff
+	check_mag:
+		IF &diff < &EPS THEN GOTO missed_target
+		RETURN
 
 on_prox:
 	$status = 1
+	END
+
+on_plate:
+	$status = 2
+	END
+
+missed_target:
+	$status = 3
 	END

@@ -29,21 +29,30 @@ registerTest({
 								var zncheck = data.opensbp.variables.zncheck;
 								
 								switch(status) {
+									case -1:
+										return reject("Test did not complete or was cancelled.");
 									case 1:
 										fabmo.showDRO();
-										return reject("Proximity switch already triggered.  Move the Y-Axis off the target and run the test again.");
+										return reject("Proximity switch already triggered.  Move the Z-Axis off the target and run the test again.");
 										break;
+									case 2:
+										return reject("Z-Zero plate switch already triggered.  Move the Z-Axis off the plate, check wiring.");
+										break;
+									case 3:
+										return reject("Failed to find target.  Check connections, Z-Plate hookup/position and drive power.")
 									default:
 										break;
 								}	
 								
 								if(Math.abs(Math.abs(zpcheck)-0.5) > 0.010) {
-									var e = new Error('Proximity switch distance discrepancy too great at positive stop: ' + Math.abs(ypcheck))
+									var error = (zpcheck-0.5).toFixed(4)
+									var e = new Error('Distance discrepancy too great at proximity switch: ' + error)
 									return reject(e)
 								}
 
 								if(Math.abs(Math.abs(zncheck)-0.5) > 0.010) {
-									var e = new Error('Proximity switch distance discrepancy too great at negative stop: ' + Math.abs(yncheck))
+									var error = (zncheck-0.5).toFixed(4)
+									var e = new Error('Distance discrepancy too great at Z-Zero plate: ' + error)
 									return reject(e)
 								}
 								resolve({
@@ -89,9 +98,15 @@ registerTest({
 								var yncheck = data.opensbp.variables.yncheck;
 
 								switch(status) {
+									case -1:
+										return reject("Test did not complete or was cancelled.")
+										break;
 									case 1:
 										fabmo.showDRO();
 										return reject("Proximity switch already triggered.  Move the Y-Axis off the target and run the test again.");
+										break;
+									case 2:
+										return reject("Failed to find proximity switch target.  Check connections and drive power.")
 										break;
 									default:
 										break;
