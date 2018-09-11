@@ -1,4 +1,5 @@
 var tests = []
+var group;
 testInProgress = false;
 currentWorkOrderNumber = null;
 var appSettings = {
@@ -104,28 +105,62 @@ function runTest(test) {
 	activateTest(test);
 	test.f().then(
 		function resolve(data) {
+
 			test_output.end_time = new Date();
 			test_output.state = 'pass';
 			test_output.result = data;
 			test_output.work_order = currentWorkOrderNumber;
 			passTest(test);
 			console.info(test_output);
-			if(keen) {
-				keen.recordEvent('test', test_output);
-				console.info(test_output);
-			}						
+			switch(test_output.group) {
+				case 'gantry':
+					console.log('gantry');
+					group = gantry;
+					break;
+				case 'indexer':
+					console.log('indexer');
+					group = inedexer;
+					break;
+			}
+			group.create(
+				test_output
+			)
+			.then(function(res) {
+				console.log(res);
+				//Maybe make a UI alert
+			})
+			.catch(function(err) {
+				console.log(err);
+			});						
 		},
 		function reject(error) {
 			test_output.end_time = new Date();
 			test_output.state = 'fail';
 			test_output.data = error.message || error;
 			test_output.work_order = currentWorkOrderNumber;
+			console.log(test_output)
 			failTest(test, error);
 			console.info(test_output);
-			if(keen) {
-				keen.recordEvent('test', test_output);
-				console.info(test_output);
-			}						
+			switch(test_output.group) {
+				case 'gantry':
+					console.log('gantry');
+					group = gantry;
+					break;
+				case 'indexer':
+					console.log('indexer');
+					group = inedexer;
+					break;
+			}
+			group.create(
+				test_output
+			)
+			.then(function(res) {
+				//Maybe make a UI alert
+				console.log(res);
+			})
+			.catch(function(err) {
+				console.log(err);
+			});					
 	});
 }
 
