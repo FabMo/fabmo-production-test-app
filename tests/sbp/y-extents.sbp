@@ -44,7 +44,9 @@ $yn = %(2)
 $yncheck=&ystart-$yn
 
 ' Jog most of the way to the other end of the table
-JY,%(2)+&jog_length
+' JY,%(2)+&jog_length
+PY,%(2)+&jog_length,4,&input
+IF %(53) = 1 THEN JY,%(2)-0.5
 
 ' Search for the positive end of travel
 &target = %(2)+(&max_length-&jog_length)+1.0
